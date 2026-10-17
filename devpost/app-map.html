@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Real Estate Follow-Up Co-Pilot — App Map</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f3f6f5;
+      color: #17211f;
+      line-height: 1.55;
+    }
+    body { margin: 0; }
+    main { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    header, section, footer { margin-top: 1.5rem; }
+    header { margin-top: 0; }
+    h1, h2, h3 { line-height: 1.2; }
+    h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); margin-bottom: .5rem; }
+    h2 { font-size: 1.25rem; margin-top: 0; }
+    h3 { font-size: 1rem; }
+    p { max-width: 72ch; }
+    .panel { background: #fff; border: 1px solid #d8e2df; border-radius: 14px; padding: 1.2rem; }
+    .muted { color: #52625d; }
+    code { background: #edf3f1; border-radius: 4px; padding: .08rem .3rem; overflow-wrap: anywhere; }
+    a { color: #075e50; text-underline-offset: .18em; }
+    a:focus-visible, summary:focus-visible { outline: 3px solid #0b7a66; outline-offset: 3px; }
+    .flow { width: 100%; height: auto; display: block; }
+    .flow text { font: 14px "Segoe UI", Arial, sans-serif; fill: #17211f; }
+    .flow .small { font-size: 12px; fill: #52625d; }
+    .flow rect { fill: #f5faf8; stroke: #89a79e; stroke-width: 1.5; rx: 10; }
+    .flow path { fill: none; stroke: #267b69; stroke-width: 2; }
+    .columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    ul, ol { padding-left: 1.3rem; }
+    li + li { margin-top: .45rem; }
+    .stamp { border-left: 4px solid #16846e; padding-left: .9rem; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="muted">Offline project guide</p>
+      <h1>AI Real Estate Follow-Up Co-Pilot</h1>
+      <p>This local dashboard turns a call recording into an editable lead, a future follow-up, and a WhatsApp draft. Leads and their edits stay in this browser; reminders only run while the dashboard is open.</p>
+    </header>
+
+    <section class="panel" aria-labelledby="flow-heading">
+      <h2 id="flow-heading">One recording, end to end</h2>
+      <svg class="flow" viewBox="0 0 820 190" role="img" aria-labelledby="diagram-title diagram-desc">
+        <title id="diagram-title">Audio-to-follow-up application flow</title>
+        <desc id="diagram-desc">The browser uploads audio to a Next.js route, Gemini returns structured lead data, the browser validates it and shows an editable card, saves it in localStorage, and checks for due reminders.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L9,3 z" fill="#267b69"></path>
+          </marker>
+        </defs>
+        <rect x="8" y="48" width="145" height="74"></rect>
+        <text x="80" y="76" text-anchor="middle">Upload a call</text>
+        <text class="small" x="80" y="98" text-anchor="middle">dashboard · browser</text>
+        <path d="M153 85 H184" marker-end="url(#arrow)"></path>
+        <rect x="190" y="48" width="145" height="74"></rect>
+        <text x="262" y="76" text-anchor="middle">Analyze audio</text>
+        <text class="small" x="262" y="98" text-anchor="middle">POST /api/analyze</text>
+        <path d="M335 85 H366" marker-end="url(#arrow)"></path>
+        <rect x="372" y="48" width="145" height="74"></rect>
+        <text x="444" y="76" text-anchor="middle">Gemini JSON</text>
+        <text class="small" x="444" y="98" text-anchor="middle">transcript + lead</text>
+        <path d="M517 85 H548" marker-end="url(#arrow)"></path>
+        <rect x="554" y="48" width="145" height="74"></rect>
+        <text x="626" y="76" text-anchor="middle">Edit &amp; save</text>
+        <text class="small" x="626" y="98" text-anchor="middle">card · localStorage</text>
+        <path d="M699 85 H730" marker-end="url(#arrow)"></path>
+        <rect x="736" y="48" width="76" height="74"></rect>
+        <text x="774" y="76" text-anchor="middle">Due</text>
+        <text class="small" x="774" y="98" text-anchor="middle">alert</text>
+        <text class="small" x="80" y="155" text-anchor="middle">Audio is transient.</text>
+        <text class="small" x="444" y="155" text-anchor="middle">Structured output is checked by the shared parser.</text>
+        <text class="small" x="774" y="155" text-anchor="middle">Notification + chime</text>
+      </svg>
+    </section>
+
+    <section class="panel" aria-labelledby="route-heading">
+      <h2 id="route-heading">Reference route through the code</h2>
+      <p class="muted">Use this route when you want to trace the audio result. It is a reference map, not a claim that you have toured these files.</p>
+      <ol>
+        <li><code>web/app/api/analyze/route.ts</code> — start at <code>POST</code>. It validates the uploaded file, sends its bytes to Gemini in one request, then parses and validates the returned JSON.</li>
+        <li><code>web/lib/lead-schema.ts</code> — follow <code>parseAnalysisResult</code>. This is the shared contract check that rejects incomplete or incorrectly shaped model output.</li>
+        <li><code>web/app/page.tsx</code> — follow <code>analyzeAudio</code> for the response-to-lead conversion; then <code>checkDueReminders</code> inside the reminder effect and <code>playReminderChime</code> for the due alert and sound.</li>
+      </ol>
+    </section>
+
+    <section class="panel" aria-labelledby="change-heading">
+      <h2 id="change-heading">To change this, start here</h2>
+      <div class="columns">
+        <div>
+          <h3>Lead fields and schedule behavior</h3>
+          <p><code>web/app/page.tsx</code> — <code>updateLeadField</code>, <code>updateLeadStatus</code>, and <code>updateFollowUpTime</code>.</p>
+        </div>
+        <div>
+          <h3>Saved leads</h3>
+          <p><code>web/lib/lead-storage.ts</code> — storage keys, validation, and JSON read/write. The confirmed active-lead delete action is in <code>web/app/page.tsx</code> at <code>deleteActiveLead</code>.</p>
+        </div>
+        <div>
+          <h3>AI extraction and draft</h3>
+          <p><code>web/app/api/analyze/route.ts</code> — the structured response schema and the prompt sent with audio.</p>
+        </div>
+        <div>
+          <h3>Reminder timing and sound</h3>
+          <p><code>web/app/page.tsx</code> — reminder interval, notification, fallback alert, and generated chime.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel stamp" aria-labelledby="practice-heading">
+      <h2 id="practice-heading">A practice to reuse</h2>
+      <p>The requested Gemini model failed against the configured key with a real 404. The model was changed only after the learner agreed, and a real audio request then verified the alternative. On another AI integration, check the provider's actual response with representative input, preserve the product behavior, and validate the returned shape before building more UI around it.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="run-heading">
+      <h2 id="run-heading">Run it again</h2>
+      <p>From <code>web/</code>, run <code>npm run dev</code> and open <code>http://localhost:3000</code>. The server needs the local <code>GEMINI_API_KEY</code> in <code>web/.env.local</code> to analyze audio. Keep that file private.</p>
+      <p class="muted">Source snapshot: commit <code>c7bbfe9</code> (<code>Add confirmed lead deletion</code>). This guide describes that source snapshot and can drift as the code changes.</p>
+      <details>
+        <summary>Where does audio and lead data go?</summary>
+        <p>The browser sends uploaded audio to the local API route for transient Gemini analysis. The app stores the resulting transcript and editable lead card in this browser's <code>localStorage</code>, not the raw audio. This is browser-local storage, not cross-device sync.</p>
+      </details>
+    </section>
+
+    <footer class="muted">
+      <p>Keep the app open for reminders. Browser notifications and sound require permission or user activation and can be restricted by browser settings.</p>
+    </footer>
+  </main>
+</body>
+</html>
