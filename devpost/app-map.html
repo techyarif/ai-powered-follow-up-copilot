@@ -121,7 +121,7 @@
     <section class="panel" aria-labelledby="run-heading">
       <h2 id="run-heading">Run it again</h2>
       <p>From <code>web/</code>, run <code>npm run dev</code> and open <code>http://localhost:3000</code>. The server needs the local <code>GEMINI_API_KEY</code> in <code>web/.env.local</code> to analyze audio. Keep that file private.</p>
-      <p class="muted">Source snapshot: commit <code>c7bbfe9</code> (<code>Add confirmed lead deletion</code>). This guide describes that source snapshot and can drift as the code changes.</p>
+      <p class="muted">Source snapshot: published commit <code>7216ccb</code> (<code>Publish clean project snapshot</code>). This guide describes that source snapshot and can drift as the code changes.</p>
       <details>
         <summary>Where does audio and lead data go?</summary>
         <p>The browser sends uploaded audio to the local API route for transient Gemini analysis. The app stores the resulting transcript and editable lead card in this browser's <code>localStorage</code>, not the raw audio. This is browser-local storage, not cross-device sync.</p>

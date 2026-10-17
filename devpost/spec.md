@@ -229,3 +229,8 @@ Open a user-initiated `https://wa.me/<international-number>?text=<URL-encoded-me
 - **Implementation revision:** the first live API request returned 404 because the configured key cannot use `gemini-2.5-flash`; with the learner's agreement, the model and request method were updated to `gemini-3.8-flash` and `ai.interactions.create`. The UI and product behavior are unchanged.
 - **Verify early during build:** ensure the selected Gemini model/API supports inline audio for all four accepted formats, the JSON response schema, and the 12 MB app limit; test audio/browser notification and autoplay behavior in the target desktop browser. Model quotas, pricing, request limits, and service data handling can change.
 - **No unresolved product choices block build.**
+
+## Sharing
+
+- **Public GitHub repository:** https://github.com/techyarif/ai-powered-follow-up-copilot
+- The published snapshot includes the app and all `devpost/` project documents except the private learner profile. `.gitignore` files, `.env.local`, and the bundled skill-pack files/history are not published. `web/.env.example` contains only a placeholder.
