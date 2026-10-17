@@ -52,9 +52,9 @@ function hasMeaningfulText(value: string) {
   return !EMPTY_ANALYSIS_VALUES.has(normalized);
 }
 
-export function isEmptyAnalysis(result: AnalysisResult) {
-  const { transcript, lead } = result;
-  const hasLeadDetails =
+export function hasExtractedLeadDetails(result: AnalysisResult) {
+  const { lead } = result;
+  return (
     lead.status !== "unknown" ||
     [
       lead.clientName,
@@ -63,9 +63,8 @@ export function isEmptyAnalysis(result: AnalysisResult) {
       lead.budget,
       lead.location,
       lead.followUpDateTime,
-    ].some(hasMeaningfulText);
-
-  return !hasMeaningfulText(transcript) && !hasLeadDetails;
+    ].some(hasMeaningfulText)
+  );
 }
 
 export function parseAnalysisResult(value: unknown): AnalysisResult | null {

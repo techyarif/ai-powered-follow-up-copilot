@@ -41,7 +41,7 @@ Use a clean, modern dark mode: dark slate or deep navy surfaces with crisp, easy
 - During processing, show an animated waveform or spinner and sequential status messages, including transcription and lead-insight extraction.
 - The result-time goal is best effort, not a hard two-second requirement. Keep showing progress until processing completes.
 - If the file is invalid or processing fails, show a clear red error alert and a **“Try Again”** action.
-- If the transcript has no clear speech and all extracted lead details are unknown, do not create a lead; ask the agent to try again with a clearer recording.
+- If all lead details are unknown or empty, do not create a lead even if a transcript was returned; ask the agent to try again with a recording that includes buyer details.
 
 ### Active lead and recent leads
 
@@ -76,7 +76,7 @@ Use a clean, modern dark mode: dark slate or deep navy surfaces with crisp, easy
 - **Processing** — Show an animated loading indicator and step-by-step status text until success or failure.
 - **Successful extraction** — Show the transcript and lead, schedule, and message content. Unknown details are labeled **“Unknown”** and remain editable.
 - **Invalid file or processing failure** — Show a red error alert with **“Try Again”**.
-- **No usable audio result** — If the transcript has no clear speech and no lead details were extracted, show a retry prompt instead of saving an empty lead.
+- **No lead details extracted** — If all lead details are unknown or empty, show a retry prompt instead of saving an empty lead, even if a transcript was returned.
 - **Missing or invalid phone number** — Keep the WhatsApp action disabled until the agent enters a valid number.
 - **Due reminder** — Show a one-time browser notification and short chime, with an in-app reminder fallback, only while the local app is open.
 - **Reload** — Restore saved recent lead records from browser `localStorage`.

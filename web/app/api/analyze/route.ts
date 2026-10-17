@@ -1,6 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { NextResponse } from "next/server";
-import { isEmptyAnalysis, parseAnalysisResult } from "@/lib/lead-schema";
+import { hasExtractedLeadDetails, parseAnalysisResult } from "@/lib/lead-schema";
 
 export const maxDuration = 60;
 
@@ -156,9 +156,9 @@ export async function POST(request: Request) {
       return errorResponse("Gemini returned incomplete lead details. Please try again.", 502);
     }
 
-    if (isEmptyAnalysis(parsed)) {
+    if (!hasExtractedLeadDetails(parsed)) {
       return errorResponse(
-        "We couldn't detect clear speech or any lead details in this recording. Please try again with a clearer audio clip.",
+        "We couldn't identify any lead details from this recording. Please try again with a clearer recording that includes the buyer's details.",
         422,
       );
     }
