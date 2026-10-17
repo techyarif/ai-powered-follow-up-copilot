@@ -202,6 +202,7 @@ Open a user-initiated `https://wa.me/<international-number>?text=<URL-encoded-me
 ## Important Failure Modes
 
 - **Unsupported, oversized, or malformed audio** → reject on the client and server; show the red error alert and Try Again. Limit is 12 MB.
+- **No usable analysis** → if the transcript has no clear speech and all extracted lead details are unknown, return an error so the dashboard prompts the agent to retry instead of saving an empty lead.
 - **Gemini key, quota, network, or malformed structured response failure** → API route returns a safe non-secret error response; dashboard shows a retry action and preserves already saved leads. Never return raw provider errors or the key.
 - **Notification permission denied or sound blocked** → show an in-page due reminder; retain a visible way to test/request permission and initialize/play the chime after a user interaction.
 
